@@ -1,0 +1,11 @@
+__pycache__
+
+# chatglm_finetune_demo: generated & downloaded files
+output
+data
+formatted_data
+ToolAlpaca/
+AdvertiseGen/
+*.gz
+*.idea
+.DS_Store

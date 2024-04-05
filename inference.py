@@ -24,21 +24,25 @@ def _resolve_path(path: Union[str, Path]) -> Path:
     return Path(path).expanduser().resolve()
 
 
-def load_model_and_tokenizer(model_dir: Union[str, Path]) -> tuple[ModelType, TokenizerType]:
+def load_model_and_tokenizer(model_dir: Union[str, Path],trust_remote_code:bool = True) -> tuple[ModelType, TokenizerType]:
+    
     model_dir = _resolve_path(model_dir)
+
     if (model_dir / 'adapter_config.json').exists():
         model = AutoPeftModelForCausalLM.from_pretrained(
             model_dir, trust_remote_code=True, device_map='auto'
         )
         tokenizer_dir = model.peft_config['default'].base_model_name_or_path
+        
+        print('*****tokenizer_dir = {'+tokenizer_dir+'} ')
     else:
         model = AutoModelForCausalLM.from_pretrained(
             model_dir, trust_remote_code=True, device_map='auto'
         )
         tokenizer_dir = model_dir
-    tokenizer = AutoTokenizer.from_pretrained(
-        tokenizer_dir, trust_remote_code=True
-    )
+
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_dir, trust_remote_code=True)
+
     return model, tokenizer
 
 
